@@ -117,10 +117,8 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     #静止
     else:
         return pg.transform.rotozoom(base_img, 0, 0.9)
-    
-        
-    
 
+        
 def main() -> None:
     """
     ゲームのメインループを実行する。
