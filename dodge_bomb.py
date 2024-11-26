@@ -67,16 +67,19 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  
-        # if not check_bound(kk_rct)[0]:
-        #     kk_rct.left = max(0, kk_rct.left)
-        #     kk_rct.right = min(WIDTH, kk_rct.right)
-        # if not check_bound(kk_rct)[1]:
-        #     kk_rct.top = max(0, kk_rct.top)
-        #     kk_rct.bottom = min(HEIGHT, kk_rct.bottom)
 
         # 爆弾の移動
         bb_rct.move_ip(vx, vy)
-        
+        x_bound, y_bound = check_bound(bb_rct)
+        if not x_bound:
+            vx = -vx
+        if not y_bound:
+            vy = -vy
+
+        # 衝突判定
+        if kk_rct.colliderect(bb_rct):
+            return
+
         # 描画
         screen.fill((0, 0, 0))
         screen.blit(pg.image.load("fig/pg_bg.jpg"), (0, 0))
