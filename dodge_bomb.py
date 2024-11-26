@@ -22,16 +22,23 @@ def main():
                 return
         screen.blit(bg_img, [0, 0]) 
 
+        # キャラクターの移動
+        DELTA = {
+            pg.K_UP: (0, -5),
+            pg.K_DOWN: (0, +5),
+            pg.K_LEFT: (-5, 0),
+            pg.K_RIGHT: (5, 0)
+        }
+
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
-        if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
-        if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
-        if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+
+        # キー入力による移動量の計算
+        for key, delta in DELTA.items():
+            if key_lst[key]:
+                sum_mv[0] += delta[0]
+                sum_mv[1] += delta[1]
+
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
