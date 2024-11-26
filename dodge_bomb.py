@@ -95,19 +95,20 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     """
     base_img = pg.image.load("fig/3.png")
     base_img2 = pg.transform.flip(base_img, True, False)  # 背景画像を左右反転
-    
+
     #左
     if sum_mv == (-5, 0):
         return pg.transform.rotozoom(base_img, 0, 0.9)
     #左上
     elif sum_mv == (-5, -5):
         return pg.transform.rotozoom(base_img, -90, 0.9)
-    #右上
-    elif sum_mv == (5, -5):
-        return pg.transform.rotozoom(pg.transform.flipbase_img,90, 0.9)
     #上
     elif sum_mv == (0, -5):
         return pg.transform.rotozoom(base_img, -90, 0.9)
+    #右上
+    elif sum_mv == (5, -5):
+        return pg.transform.rotozoom(base_img2, 90, 0.9)#ここまではできてる
+    
     #右 # 背景画像を左右反転
     elif sum_mv == (5, 0):
         return pg.transform.flip(base_img, True, False) 
@@ -118,9 +119,6 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     else:
         return pg.transform.rotozoom(base_img, 0, 0.9)
     
-        
-    
-
 def main() -> None:
     """
     ゲームのメインループを実行する。
