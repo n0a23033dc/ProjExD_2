@@ -16,7 +16,6 @@ DELTA: dict[int, tuple[int, int]] = {
 # 現在のディレクトリを変更
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数で与えられたRectが画面の中か外かを判定する。
@@ -35,7 +34,6 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
-
 def game_over(screen: pg.Surface) -> None:
     """
     ゲームオーバー画面を表示し、5秒後に終了する。
@@ -43,7 +41,7 @@ def game_over(screen: pg.Surface) -> None:
     Args:
         screen (pg.Surface): ゲーム画面のSurface。
     """
-    #ブラックアウトする半透明の黒い画面を描画
+    # 半透明の黒い画面を描画
     black_surface = pg.Surface((WIDTH, HEIGHT))
     black_surface.set_alpha(128)
     black_surface.fill((0, 0, 0))
@@ -69,7 +67,6 @@ def game_over(screen: pg.Surface) -> None:
     pg.display.update()
     time.sleep(5)
 
-
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     """
     サイズの異なる爆弾Surfaceを要素としたリストと加速度リストを返す関数
@@ -86,6 +83,44 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_imgs.append(bb_img)
     return bb_imgs, bb_accs
 
+def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
+    """
+    移動量の合計値タプルに対応する向きの画像Surfaceを返す関数
+
+    Args:
+        sum_mv (tuple[int, int]): 移動量の合計値タプル
+
+    Returns:
+        pg.Surface: 向きに対応するこうかとんの画像Surface
+    """
+    base_img = pg.image.load("fig/3.png")
+    base_img2 = pg.transform.flip(base_img, True, False)  # 背景画像を左右反転
+    
+    #左
+    if sum_mv == (-5, 0):
+        return pg.transform.rotozoom(base_img, 0, 0.9)
+    #左上
+    elif sum_mv == (-5, -5):
+        return pg.transform.rotozoom(base_img, -90, 0.9)
+    #右上
+    elif sum_mv == (5, -5):
+        return pg.transform.rotozoom(pg.transform.flipbase_img,90, 0.9)
+    #上
+    elif sum_mv == (0, -5):
+        return pg.transform.rotozoom(base_img, -90, 0.9)
+    #右 # 背景画像を左右反転
+    elif sum_mv == (5, 0):
+        return pg.transform.flip(base_img, True, False) 
+    #下
+    elif sum_mv == (0, 5):
+        return pg.transform.rotozoom(base_img,90, 0.9)
+    #静止
+    else:
+        return pg.transform.rotozoom(base_img, 0, 0.9)
+    
+        
+    
+
 def main() -> None:
     """
     ゲームのメインループを実行する。
@@ -93,7 +128,7 @@ def main() -> None:
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    kk_img = get_kk_img((0, 0))
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
 
@@ -130,6 +165,9 @@ def main() -> None:
         # こうかとんが画面外なら元の場所に戻す
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        
+        # こうかとんの画像を移動方向に応じて切り替える
+        kk_img = get_kk_img(tuple(sum_mv))
         screen.blit(kk_img, kk_rct)
 
         # 爆弾の移動と拡大・加速
