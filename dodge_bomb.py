@@ -7,6 +7,20 @@ WIDTH, HEIGHT = 1100, 650
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
+def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
+    """
+    引数で与えられたRectが画面内に収まっているかを判定する関数
+    引数：こうかとんRect or 爆弾Rect
+    戻り値：真理値タプル(横、縦)/画面内：True, 画面外：False
+    """
+    yoko, tate = True, True
+    if rect.left < 0 or rect.right > WIDTH:
+        yoko = False
+    if rect.top < 0 or rect.bottom > HEIGHT:
+        tate = False
+    return yoko, tate
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -51,12 +65,21 @@ def main():
                 sum_mv[1] += delta[1]
 
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  
+        # if not check_bound(kk_rct)[0]:
+        #     kk_rct.left = max(0, kk_rct.left)
+        #     kk_rct.right = min(WIDTH, kk_rct.right)
+        # if not check_bound(kk_rct)[1]:
+        #     kk_rct.top = max(0, kk_rct.top)
+        #     kk_rct.bottom = min(HEIGHT, kk_rct.bottom)
 
         # 爆弾の移動
         bb_rct.move_ip(vx, vy)
-
         
-
+        # 描画
+        screen.fill((0, 0, 0))
+        screen.blit(pg.image.load("fig/pg_bg.jpg"), (0, 0))
         screen.blit(kk_img, kk_rct)
         screen.blit(bb_img, bb_rct)
         pg.display.update()
