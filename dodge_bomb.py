@@ -102,18 +102,24 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     #左上
     elif sum_mv == (-5, -5):
         return pg.transform.rotozoom(base_img, -90, 0.9)
-    #右上
-    elif sum_mv == (5, -5):
-        return pg.transform.rotozoom(pg.transform.flipbase_img,90, 0.9)
     #上
     elif sum_mv == (0, -5):
         return pg.transform.rotozoom(base_img, -90, 0.9)
+    #右上
+    elif sum_mv == (5, -5):
+        return pg.transform.rotozoom(base_img2,-90, 0.9)
     #右 # 背景画像を左右反転
     elif sum_mv == (5, 0):
-        return pg.transform.flip(base_img, True, False) 
+        return pg.transform.rotozoom(base_img2, 0, 0.9)
+    #右下
+    elif sum_mv == (5, 5):
+        return pg.transform.rotozoom(base_img2, -90, 0.9)
     #下
     elif sum_mv == (0, 5):
-        return pg.transform.rotozoom(base_img,90, 0.9)
+        return pg.transform.rotozoom(base_img2, -90, 0.9)
+    #左下
+    elif sum_mv == (-5, 5):
+        return pg.transform.rotozoom(base_img, 90, 0.9)
     #静止
     else:
         return pg.transform.rotozoom(base_img, 0, 0.9)
